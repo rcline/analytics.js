@@ -118,7 +118,8 @@
     "@segment/analytics.js-integration-webengage": "git+https://github.com/segment-integrations/analytics.js-integration-webengage.git",
     "@segment/analytics.js-integration-woopra": "git+https://github.com/segment-integrations/analytics.js-integration-woopra.git",
     "@segment/analytics.js-integration-wootric": "git+https://github.com/segment-integrations/analytics.js-integration-wootric.git",
-    "@segment/analytics.js-integration-yandex-metrica": "git+https://github.com/segment-integrations/analytics.js-integration-yandex-metrica.git"
+    "@segment/analytics.js-integration-yandex-metrica": "git+https://github.com/segment-integrations/analytics.js-integration-yandex-metrica.git",
+    "@segment/analytics.js-integration-doubleclick-floodlight": "git+https://github.com/segment-integrations/analytics.js-integration-doubleclick-floodlight.git"
   },
   "devDependencies": {
     "@segment/eslint-config": "^3.1.1",
