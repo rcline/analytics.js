@@ -35,7 +35,7 @@ Object.keys(Integrations).forEach(function(name) {
   analytics.use(Integrations[name]);
 });
 
-},{"../package.json":127,"./integrations":2,"@segment/analytics.js-core":21}],2:[function(require,module,exports){
+},{"../package.json":149,"./integrations":2,"@segment/analytics.js-core":22}],2:[function(require,module,exports){
 /* eslint quote-props: off */
 'use strict';
 
@@ -49,10 +49,11 @@ module.exports = {
   'google-tag-manager': require('@segment/analytics.js-integration-google-tag-manager'),
   'google-analytics': require('@segment/analytics.js-integration-google-analytics'),
   'doubleclick-floodlight': require('@segment/analytics.js-integration-doubleclick-floodlight'),
-  'bing-ads': require('@segment/analytics.js-integration-bing-ads')
+  'bing-ads': require('@segment/analytics.js-integration-bing-ads'),
+  'segmentio': require('@segment/analytics.js-integration-segmentio')
 };
 
-},{"@segment/analytics.js-integration-bing-ads":30,"@segment/analytics.js-integration-doubleclick-floodlight":37,"@segment/analytics.js-integration-facebook-pixel":38,"@segment/analytics.js-integration-google-analytics":39,"@segment/analytics.js-integration-google-tag-manager":40}],3:[function(require,module,exports){
+},{"@segment/analytics.js-integration-bing-ads":31,"@segment/analytics.js-integration-doubleclick-floodlight":38,"@segment/analytics.js-integration-facebook-pixel":39,"@segment/analytics.js-integration-google-analytics":40,"@segment/analytics.js-integration-google-tag-manager":41,"@segment/analytics.js-integration-segmentio":42}],3:[function(require,module,exports){
 'use strict';
 
 /*
@@ -344,7 +345,7 @@ var clone = function clone(obj) {
 
 module.exports = clone;
 
-},{"component-type":72}],6:[function(require,module,exports){
+},{"component-type":92}],6:[function(require,module,exports){
 'use strict';
 
 /*
@@ -1234,6 +1235,53 @@ var rest = function rest(collection) {
 module.exports = rest;
 
 },{}],17:[function(require,module,exports){
+'use strict';
+
+/*
+ * Module dependencies.
+ */
+
+var parse = require('component-querystring').parse;
+
+/**
+ * All the ad query params we look for.
+ */
+var QUERYIDS = {
+  btid: 'dataxu',
+  urid: 'millennial-media'
+};
+
+/**
+ * Get all ads info from the given `querystring`
+ *
+ * @param {string} query
+ * @return {Object}
+ */
+function ads(query) {
+  var params = parse(query);
+  for (var key in params) {
+    if (params.hasOwnProperty(key)) {
+      for (var id in QUERYIDS) {
+        if (QUERYIDS.hasOwnProperty(id)) {
+          if (key === id) {
+            return {
+              id : params[key],
+              type : QUERYIDS[id]
+            };
+          }
+        }
+      }
+    }
+  }
+}
+
+/*
+ * Exports.
+ */
+
+module.exports = ads;
+
+},{"component-querystring":90}],18:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2135,7 +2183,7 @@ module.exports.store = store;
 module.exports.metrics = metrics;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./cookie":18,"./group":20,"./memory":22,"./metrics":23,"./middleware":24,"./normalize":25,"./pageDefaults":26,"./store":27,"./user":28,"@ndhoule/after":3,"@ndhoule/clone":5,"@ndhoule/defaults":6,"@ndhoule/each":8,"@ndhoule/foldl":11,"@ndhoule/keys":13,"@ndhoule/pick":15,"@segment/is-meta":50,"@segment/prevent-default":54,"bind-all":59,"component-emitter":67,"component-event":68,"component-querystring":70,"component-type":72,"debug":75,"extend":77,"is":84,"next-tick":95,"segmentio-facade":107}],18:[function(require,module,exports){
+},{"./cookie":19,"./group":21,"./memory":23,"./metrics":24,"./middleware":25,"./normalize":26,"./pageDefaults":27,"./store":28,"./user":29,"@ndhoule/after":3,"@ndhoule/clone":5,"@ndhoule/defaults":6,"@ndhoule/each":8,"@ndhoule/foldl":11,"@ndhoule/keys":13,"@ndhoule/pick":15,"@segment/is-meta":58,"@segment/prevent-default":71,"bind-all":78,"component-emitter":87,"component-event":88,"component-querystring":90,"component-type":92,"debug":95,"extend":97,"is":104,"next-tick":115,"segmentio-facade":127}],19:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2263,7 +2311,7 @@ module.exports = bindAll(new Cookie());
 
 module.exports.Cookie = Cookie;
 
-},{"@ndhoule/clone":5,"@ndhoule/defaults":6,"@segment/top-domain":57,"bind-all":59,"component-cookie":61,"debug":75,"json3":85}],19:[function(require,module,exports){
+},{"@ndhoule/clone":5,"@ndhoule/defaults":6,"@segment/top-domain":75,"bind-all":78,"component-cookie":81,"debug":95,"json3":105}],20:[function(require,module,exports){
 'use strict';
 
 /*
@@ -2563,7 +2611,7 @@ Entity.prototype.load = function() {
   this.traits(this.traits());
 };
 
-},{"./cookie":18,"./memory":22,"./store":27,"@ndhoule/clone":5,"@ndhoule/defaults":6,"@ndhoule/extend":10,"@segment/isodate-traverse":51,"debug":75}],20:[function(require,module,exports){
+},{"./cookie":19,"./memory":23,"./store":28,"@ndhoule/clone":5,"@ndhoule/defaults":6,"@ndhoule/extend":10,"@segment/isodate-traverse":59,"debug":95}],21:[function(require,module,exports){
 'use strict';
 
 /*
@@ -2619,7 +2667,7 @@ module.exports = bindAll(new Group());
 
 module.exports.Group = Group;
 
-},{"./entity":19,"bind-all":59,"debug":75,"inherits":82}],21:[function(require,module,exports){
+},{"./entity":20,"bind-all":78,"debug":95,"inherits":102}],22:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2646,7 +2694,7 @@ analytics.VERSION = require('../package.json').version;
 
 module.exports = analytics;
 
-},{"../package.json":29,"./analytics":17}],22:[function(require,module,exports){
+},{"../package.json":30,"./analytics":18}],23:[function(require,module,exports){
 'use strict';
 
 /*
@@ -2712,7 +2760,7 @@ Memory.prototype.remove = function(key) {
   return true;
 };
 
-},{"@ndhoule/clone":5,"bind-all":59}],23:[function(require,module,exports){
+},{"@ndhoule/clone":5,"bind-all":78}],24:[function(require,module,exports){
 'use strict';
 
 var bindAll = require('bind-all');
@@ -2809,7 +2857,7 @@ module.exports = bindAll(new Metrics());
 
 module.exports.Metrics = Metrics;
 
-},{"@segment/send-json":55,"bind-all":59,"debug":75}],24:[function(require,module,exports){
+},{"@segment/send-json":73,"bind-all":78,"debug":95}],25:[function(require,module,exports){
 'use strict';
 
 var Facade = require('segmentio-facade');
@@ -2875,7 +2923,7 @@ function executeChain(payload, integration, middlewares, index) {
 
 module.exports.Chain = Chain;
 
-},{"segmentio-facade":107}],25:[function(require,module,exports){
+},{"segmentio-facade":127}],26:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2976,7 +3024,7 @@ function normalize(msg, list) {
   }
 }
 
-},{"@ndhoule/defaults":6,"@ndhoule/each":8,"@ndhoule/includes":12,"@ndhoule/map":14,"component-type":72,"debug":75,"json3":85,"spark-md5":114,"uuid":126}],26:[function(require,module,exports){
+},{"@ndhoule/defaults":6,"@ndhoule/each":8,"@ndhoule/includes":12,"@ndhoule/map":14,"component-type":92,"debug":95,"json3":105,"spark-md5":134,"uuid":146}],27:[function(require,module,exports){
 'use strict';
 
 /*
@@ -3040,7 +3088,7 @@ function canonicalUrl(search) {
 
 module.exports = pageDefaults;
 
-},{"@ndhoule/includes":12,"@segment/canonical":48,"component-url":73}],27:[function(require,module,exports){
+},{"@ndhoule/includes":12,"@segment/canonical":56,"component-url":93}],28:[function(require,module,exports){
 'use strict';
 
 /*
@@ -3125,7 +3173,7 @@ module.exports = bindAll(new Store());
 
 module.exports.Store = Store;
 
-},{"@ndhoule/defaults":6,"@segment/store":56,"bind-all":59}],28:[function(require,module,exports){
+},{"@ndhoule/defaults":6,"@segment/store":74,"bind-all":78}],29:[function(require,module,exports){
 'use strict';
 
 /*
@@ -3328,7 +3376,7 @@ module.exports = bindAll(new User());
 
 module.exports.User = User;
 
-},{"./cookie":18,"./entity":19,"./store":27,"bind-all":59,"component-cookie":61,"debug":75,"inherits":82,"uuid":126}],29:[function(require,module,exports){
+},{"./cookie":19,"./entity":20,"./store":28,"bind-all":78,"component-cookie":81,"debug":95,"inherits":102,"uuid":146}],30:[function(require,module,exports){
 module.exports={
   "_from": "@segment/analytics.js-core@^3.0.0",
   "_id": "@segment/analytics.js-core@3.9.0",
@@ -3487,7 +3535,7 @@ module.exports={
   "version": "3.9.0"
 }
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 'use strict';
 
 /**
@@ -3575,7 +3623,7 @@ Bing.prototype.track = function(track) {
   window.uetq.push(event);
 };
 
-},{"@segment/analytics.js-integration":31}],31:[function(require,module,exports){
+},{"@segment/analytics.js-integration":32}],32:[function(require,module,exports){
 'use strict';
 
 /**
@@ -3640,7 +3688,7 @@ function createIntegration(name) {
 
 module.exports = createIntegration;
 
-},{"./protos":32,"./statics":33,"@ndhoule/clone":5,"@ndhoule/defaults":6,"@ndhoule/extend":10,"component-bind":60,"debug":35,"slug-component":113}],32:[function(require,module,exports){
+},{"./protos":33,"./statics":34,"@ndhoule/clone":5,"@ndhoule/defaults":6,"@ndhoule/extend":10,"component-bind":79,"debug":36,"slug-component":133}],33:[function(require,module,exports){
 'use strict';
 
 /**
@@ -4116,7 +4164,7 @@ function render(template, locals) {
   }, {}, template.attrs);
 }
 
-},{"@ndhoule/after":3,"@ndhoule/each":8,"@ndhoule/every":9,"@ndhoule/foldl":11,"@segment/fmt":49,"@segment/load-script":53,"analytics-events":34,"component-emitter":67,"is":84,"load-iframe":89,"next-tick":95,"to-no-case":118}],33:[function(require,module,exports){
+},{"@ndhoule/after":3,"@ndhoule/each":8,"@ndhoule/every":9,"@ndhoule/foldl":11,"@segment/fmt":57,"@segment/load-script":61,"analytics-events":35,"component-emitter":87,"is":104,"load-iframe":109,"next-tick":115,"to-no-case":138}],34:[function(require,module,exports){
 'use strict';
 
 /**
@@ -4281,7 +4329,7 @@ function objectify(str) {
   };
 }
 
-},{"@ndhoule/each":8,"@ndhoule/includes":12,"component-emitter":67,"domify":76}],34:[function(require,module,exports){
+},{"@ndhoule/each":8,"@ndhoule/includes":12,"component-emitter":87,"domify":96}],35:[function(require,module,exports){
 
 module.exports = {
   // Promotions
@@ -4348,7 +4396,7 @@ module.exports = {
   pushNotificationBounced: /^[ _]?push[ _]?notification[ _]?bounced[ _]?$/i
 };
 
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 (function (process){
 /**
  * This is the web browser implementation of `debug()`.
@@ -4537,7 +4585,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":36,"_process":98}],36:[function(require,module,exports){
+},{"./debug":37,"_process":118}],37:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -4741,7 +4789,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":90}],37:[function(require,module,exports){
+},{"ms":110}],38:[function(require,module,exports){
 'use strict';
 
 /**
@@ -4897,7 +4945,7 @@ Floodlight.prototype.page = function(page) {
   if (name) this.track(page.track(name));
 };
 
-},{"@ndhoule/each":8,"@ndhoule/foldl":11,"@segment/analytics.js-integration":41,"component-querystring":70,"obj-case":96,"to-no-case":118}],38:[function(require,module,exports){
+},{"@ndhoule/each":8,"@ndhoule/foldl":11,"@segment/analytics.js-integration":49,"component-querystring":90,"obj-case":116,"to-no-case":138}],39:[function(require,module,exports){
 'use strict';
 
 /**
@@ -5245,7 +5293,7 @@ function formatTraits(analytics) {
   });
 }
 
-},{"@ndhoule/each":8,"@ndhoule/foldl":11,"@segment/analytics.js-integration":41,"dateformat":74,"is":84,"reject":99,"segmentio-facade":107,"to-camel-case":116}],39:[function(require,module,exports){
+},{"@ndhoule/each":8,"@ndhoule/foldl":11,"@segment/analytics.js-integration":49,"dateformat":94,"is":104,"reject":119,"segmentio-facade":127,"to-camel-case":136}],40:[function(require,module,exports){
 'use strict';
 
 /**
@@ -6346,7 +6394,7 @@ function createProductTrack(track, properties) {
   return new Track({ properties: properties });
 }
 
-},{"@ndhoule/defaults":6,"@segment/analytics.js-integration":41,"component-each":65,"extend":77,"global-queue":78,"is":84,"obj-case":96,"object-component":97,"reject":99,"segmentio-facade":107,"use-https":123}],40:[function(require,module,exports){
+},{"@ndhoule/defaults":6,"@segment/analytics.js-integration":49,"component-each":85,"extend":97,"global-queue":98,"is":104,"obj-case":116,"object-component":117,"reject":119,"segmentio-facade":127,"use-https":143}],41:[function(require,module,exports){
 'use strict';
 
 /**
@@ -6447,7 +6495,721 @@ GTM.prototype.track = function(track) {
   push(props);
 };
 
-},{"@segment/analytics.js-integration":41,"global-queue":78}],41:[function(require,module,exports){
+},{"@segment/analytics.js-integration":49,"global-queue":98}],42:[function(require,module,exports){
+'use strict';
+
+/**
+ * Module dependencies.
+ */
+
+var ads = require('@segment/ad-params');
+var clone = require('component-clone');
+var cookie = require('component-cookie');
+var extend = require('@ndhoule/extend');
+var integration = require('@segment/analytics.js-integration');
+var json = require('json3');
+var keys = require('@ndhoule/keys');
+var localstorage = require('yields-store');
+var protocol = require('@segment/protocol');
+var send = require('@segment/send-json');
+var topDomain = require('@segment/top-domain');
+var utm = require('@segment/utm-params');
+var uuid = require('uuid').v4;
+var Queue = require('@segment/localstorage-retry');
+
+/**
+ * Cookie options
+ */
+
+var cookieOptions = {
+  // 1 year
+  maxage: 31536000000,
+  secure: false,
+  path: '/'
+};
+
+
+/**
+ * Segment messages can be a maximum of 32kb.
+ */
+var MAX_SIZE = 32 * 1000;
+
+/**
+ * Queue options
+ *
+ * Attempt with exponential backoff for upto 10 times.
+ * Backoff periods are: 1s, 2s, 4s, 8s, 16s, 32s, 64s, 128s (~2m), 256s (~4m),
+ * 512s (~8.5m) and 1024s (~17m).
+ */
+
+var queueOptions = {
+  maxRetryDelay: 360000, // max interval of 1hr. Added as a guard.
+  minRetryDelay: 1000, // first attempt (1s)
+  backoffFactor: 2,
+  maxAttempts: 10,
+  maxItems: 100
+};
+
+/**
+ * Expose `Segment` integration.
+ */
+
+var Segment = exports = module.exports = integration('Segment.io')
+  .option('apiKey', '')
+  .option('apiHost', 'api.segment.io/v1')
+  .option('crossDomainIdServers', [])
+  .option('deleteCrossDomainId', false)
+  .option('saveCrossDomainIdInLocalStorage', true)
+  .option('retryQueue', true)
+  .option('addBundledMetadata', false)
+  .option('unbundledIntegrations', []);
+
+/**
+ * Get the store.
+ *
+ * @return {Function}
+ */
+
+exports.storage = function() {
+  return protocol() === 'file:' || protocol() === 'chrome-extension:' ? localstorage : cookie;
+};
+
+/**
+ * Expose global for testing.
+ */
+
+exports.global = window;
+
+
+/**
+ * Send the given `obj` and `headers` to `url` with the specified `timeout` and
+ * `fn(err, req)`. Exported for testing.
+ *
+ * @param {String} url
+ * @param {Object} obj
+ * @param {Object} headers
+ * @param {long} timeout
+ * @param {Function} fn
+ * @api private
+ */
+
+exports.sendJsonWithTimeout = function(url, obj, headers, timeout, fn) {
+  // only proceed with our new code path when cors is supported. this is
+  // unlikely to happen in production, but we're being safe to preserve backward
+  // compatibility.
+  if (send.type !== 'xhr') {
+    send(url, obj, headers, fn);
+    return;
+  }
+
+  var req = new XMLHttpRequest();
+  req.onerror = fn;
+  req.onreadystatechange = done;
+
+  req.open('POST', url, true);
+
+  req.timeout = timeout;
+  req.ontimeout = fn;
+
+  // TODO: Remove this eslint disable
+  // eslint-disable-next-line guard-for-in
+  for (var k in headers) {
+    req.setRequestHeader(k, headers[k]);
+  }
+  req.send(json.stringify(obj));
+
+  function done() {
+    if (req.readyState === 4) {
+      // Fail on 429 and 5xx HTTP errors
+      if (req.status === 429 || req.status >= 500 && req.status < 600) {
+        fn(new Error('HTTP Error ' + req.status + ' (' + req.statusText + ')'));
+      } else {
+        fn(null, req);
+      }
+    }
+  }
+};
+
+/**
+ * Initialize.
+ *
+ * https://github.com/segmentio/segmentio/blob/master/modules/segmentjs/segment.js/v1/segment.js
+ *
+ * @api public
+ */
+
+Segment.prototype.initialize = function() {
+  var self = this;
+
+  if (this.options.retryQueue) {
+    this._lsqueue = new Queue('segmentio', queueOptions, function(item, done) {
+      // apply sentAt at flush time and reset on each retry
+      // so the tracking-api doesn't interpret a time skew
+      item.msg.sentAt = new Date();
+
+      // send with 10s timeout
+      Segment.sendJsonWithTimeout(item.url, item.msg, item.headers, 10 * 1000, function(err, res) {
+        self.debug('sent %O, received %O', item.msg, [err, res]);
+        if (err) return done(err);
+        done(null, res);
+      });
+    });
+
+    this._lsqueue.start();
+  }
+
+  this.ready();
+
+  this.analytics.on('invoke', function(msg) {
+    var action = msg.action();
+    var listener = 'on' + msg.action();
+    self.debug('%s %o', action, msg);
+    if (self[listener]) self[listener](msg);
+    self.ready();
+  });
+
+  // Delete cross domain identifiers.
+  this.deleteCrossDomainIdIfNeeded();
+
+  // At this moment we intentionally do not want events to be queued while we retrieve the `crossDomainId`
+  // so `.ready` will get called right away and we'll try to figure out `crossDomainId`
+  // separately
+  if (this.isCrossDomainAnalyticsEnabled()) {
+    this.retrieveCrossDomainId();
+  }
+};
+
+/**
+ * Loaded.
+ *
+ * @api private
+ * @return {boolean}
+ */
+
+Segment.prototype.loaded = function() {
+  return true;
+};
+
+/**
+ * Page.
+ *
+ * @api public
+ * @param {Page} page
+ */
+
+Segment.prototype.onpage = function(page) {
+  this.enqueue('/p', page.json());
+};
+
+/**
+ * Identify.
+ *
+ * @api public
+ * @param {Identify} identify
+ */
+
+Segment.prototype.onidentify = function(identify) {
+  this.enqueue('/i', identify.json());
+};
+
+/**
+ * Group.
+ *
+ * @api public
+ * @param {Group} group
+ */
+
+Segment.prototype.ongroup = function(group) {
+  this.enqueue('/g', group.json());
+};
+
+/**
+ * ontrack.
+ *
+ * TODO: Document this.
+ *
+ * @api private
+ * @param {Track} track
+ */
+
+Segment.prototype.ontrack = function(track) {
+  var json = track.json();
+  // TODO: figure out why we need traits.
+  delete json.traits;
+  this.enqueue('/t', json);
+};
+
+/**
+ * Alias.
+ *
+ * @api public
+ * @param {Alias} alias
+ */
+
+Segment.prototype.onalias = function(alias) {
+  var json = alias.json();
+  var user = this.analytics.user();
+  json.previousId = json.previousId || json.from || user.id() || user.anonymousId();
+  json.userId = json.userId || json.to;
+  delete json.from;
+  delete json.to;
+  this.enqueue('/a', json);
+};
+
+/**
+ * Normalize the given `msg`.
+ *
+ * @api private
+ * @param {Object} msg
+ */
+
+Segment.prototype.normalize = function(msg) {
+  this.debug('normalize %o', msg);
+  var user = this.analytics.user();
+  var global = exports.global;
+  var query = global.location.search;
+  var ctx = msg.context = msg.context || msg.options || {};
+  delete msg.options;
+  msg.writeKey = this.options.apiKey;
+  ctx.userAgent = navigator.userAgent;
+  if (!ctx.library) ctx.library = { name: 'analytics.js', version: this.analytics.VERSION };
+  var crossDomainId = this.getCachedCrossDomainId();
+  if (crossDomainId && this.isCrossDomainAnalyticsEnabled()) {
+    if (!ctx.traits) {
+      ctx.traits = { crossDomainId: crossDomainId };
+    } else if (!ctx.traits.crossDomainId) {
+      ctx.traits.crossDomainId = crossDomainId;
+    }
+  }
+  // if user provides campaign via context, do not overwrite with UTM qs param
+  if (query && !ctx.campaign) {
+    ctx.campaign = utm(query);
+  }
+  this.referrerId(query, ctx);
+  msg.userId = msg.userId || user.id();
+  msg.anonymousId = user.anonymousId();
+  msg.sentAt = new Date();
+  // Add _metadata.
+  var failedInitializations = this.analytics.failedInitializations || [];
+  if (failedInitializations.length > 0) {
+    msg._metadata = { failedInitializations: failedInitializations };
+  }
+  if (this.options.addBundledMetadata) {
+    var bundled = keys(this.analytics.Integrations);
+    msg._metadata = msg._metadata || {};
+    msg._metadata.bundled = bundled;
+    msg._metadata.unbundled = this.options.unbundledIntegrations;
+  }
+  this.debug('normalized %o', msg);
+  this.ampId(ctx);
+  return msg;
+};
+
+/**
+ * Add amp id if it exists.
+ *
+ * @param {Object} ctx
+ */
+
+Segment.prototype.ampId = function(ctx) {
+  var ampId = this.cookie('segment_amp_id');
+  if (ampId) ctx.amp = { id: ampId };
+};
+
+/**
+ * Send `obj` to `path`.
+ *
+ * @api private
+ * @param {string} path
+ * @param {Object} obj
+ * @param {Function} fn
+ */
+
+Segment.prototype.enqueue = function(path, msg, fn) {
+  var url = 'https://' + this.options.apiHost + path;
+  var headers = { 'Content-Type': 'text/plain' };
+  msg = this.normalize(msg);
+
+  // Print a log statement when messages exceed the maximum size. In the future,
+  // we may consider dropping this event on the client entirely.
+  if (json.stringify(msg).length > MAX_SIZE) {
+    this.debug('message must be less than 32kb %O', msg);
+  }
+
+  this.debug('enqueueing %O', msg);
+
+  var self = this;
+  if (this.options.retryQueue) {
+    this._lsqueue.addItem({
+      url: url,
+      headers: headers,
+      msg: msg
+    });
+  } else {
+    send(url, msg, headers, function(err, res) {
+      self.debug('sent %O, received %O', msg, [err, res]);
+      if (fn) {
+        if (err) return fn(err);
+        fn(null, res);
+      }
+    });
+  }
+};
+
+/**
+ * Gets/sets cookies on the appropriate domain.
+ *
+ * @api private
+ * @param {string} name
+ * @param {*} val
+ */
+
+Segment.prototype.cookie = function(name, val) {
+  var store = Segment.storage();
+  if (arguments.length === 1) return store(name);
+  var global = exports.global;
+  var href = global.location.href;
+  var domain = '.' + topDomain(href);
+  if (domain === '.') domain = '';
+  this.debug('store domain %s -> %s', href, domain);
+  var opts = clone(cookieOptions);
+  opts.domain = domain;
+  this.debug('store %s, %s, %o', name, val, opts);
+  store(name, val, opts);
+  if (store(name)) return;
+  delete opts.domain;
+  this.debug('fallback store %s, %s, %o', name, val, opts);
+  store(name, val, opts);
+};
+
+/**
+ * Add referrerId to context.
+ *
+ * TODO: remove.
+ *
+ * @api private
+ * @param {Object} query
+ * @param {Object} ctx
+ */
+
+Segment.prototype.referrerId = function(query, ctx) {
+  var stored = this.cookie('s:context.referrer');
+  var ad;
+
+  if (stored) stored = json.parse(stored);
+  if (query) ad = ads(query);
+
+  ad = ad || stored;
+
+  if (!ad) return;
+  ctx.referrer = extend(ctx.referrer || {}, ad);
+  this.cookie('s:context.referrer', json.stringify(ad));
+};
+
+/**
+ * isCrossDomainAnalyticsEnabled returns true if cross domain analytics is enabled.
+ * This field is not directly supplied, so it is inferred by inspecting the
+ * `crossDomainIdServers` array in settings. If this array is null or empty,
+ * it is assumed that cross domain analytics is disabled.
+ *
+ * @api private
+ */
+Segment.prototype.isCrossDomainAnalyticsEnabled = function() {
+  if (!this.options.crossDomainIdServers) {
+    return false;
+  }
+  return this.options.crossDomainIdServers.length > 0;
+};
+
+/**
+ * retrieveCrossDomainId.
+ *
+ * @api private
+ * @param {function) callback => err, {crossDomainId, fromServer, timestamp}
+ */
+Segment.prototype.retrieveCrossDomainId = function(callback) {
+  if (!this.isCrossDomainAnalyticsEnabled()) {
+    // Callback is only provided in tests.
+    if (callback) {
+      callback('crossDomainId not enabled', null);
+    }
+    return;
+  }
+
+  var cachedCrossDomainId = this.getCachedCrossDomainId();
+  if (cachedCrossDomainId) {
+    // Callback is only provided in tests.
+    if (callback) {
+      callback(null, {
+        crossDomainId: cachedCrossDomainId
+      });
+    }
+    return;
+  }
+
+  var self = this;
+  var writeKey = this.options.apiKey;
+
+  // Exclude the current domain from the list of servers we're querying
+  var currentTld = getTld(window.location.hostname);
+  var domains = [];
+  for (var i = 0; i < this.options.crossDomainIdServers.length; i++) {
+    var domain = this.options.crossDomainIdServers[i];
+    if (getTld(domain) !== currentTld) {
+      domains.push(domain);
+    }
+  }
+
+  getCrossDomainIdFromServerList(domains, writeKey, function(err, res) {
+    if (err) {
+      // Callback is only provided in tests.
+      if (callback) {
+        callback(err, null);
+      }
+      // We optimize for no conflicting xid as much as possible. So bail out if there is an
+      // error and we cannot be sure that xid does not exist on any other domains.
+      return;
+    }
+
+    var crossDomainId = null;
+    var fromDomain = null;
+    if (res) {
+      crossDomainId = res.id;
+      fromDomain = res.domain;
+    } else {
+      crossDomainId = uuid();
+      fromDomain = window.location.hostname;
+    }
+
+    self.saveCrossDomainId(crossDomainId);
+    self.analytics.identify({
+      crossDomainId: crossDomainId
+    });
+
+    // Callback is only provided in tests.
+    if (callback) {
+      callback(null, {
+        crossDomainId: crossDomainId,
+        fromDomain: fromDomain
+      });
+    }
+  });
+};
+
+/**
+ * getCachedCrossDomainId returns the cross domain identifier stored on the client based on the `saveCrossDomainIdInLocalStorage` flag.
+ * If `saveCrossDomainIdInLocalStorage` is false, it reads it from the `seg_xid` cookie.
+ * If `saveCrossDomainIdInLocalStorage` is true, it reads it from the `seg_xid` key in localStorage.
+ * 
+ * @return {string} crossDomainId
+ */
+Segment.prototype.getCachedCrossDomainId = function() {
+  if (this.options.saveCrossDomainIdInLocalStorage) {
+    return localstorage('seg_xid');
+  }
+  return this.cookie('seg_xid');
+};
+
+/**
+ * saveCrossDomainId saves the cross domain identifier. The implementation differs based on the `saveCrossDomainIdInLocalStorage` flag.
+ * If `saveCrossDomainIdInLocalStorage` is false, it saves it as the `seg_xid` cookie.
+ * If `saveCrossDomainIdInLocalStorage` is true, it saves it to localStorage (so that it can be accessed on the current domain)
+ * and as a httpOnly cookie (so that can it can be provided to other domains).
+ *
+ * @api private
+ */
+Segment.prototype.saveCrossDomainId = function(crossDomainId) {
+  if (!this.options.saveCrossDomainIdInLocalStorage) {
+    this.cookie('seg_xid', crossDomainId);
+    return;
+  }
+
+  var self = this;
+
+  // Save the cookie by making a request to the xid server for the current domain.
+  var currentTld = getTld(window.location.hostname);
+  for (var i = 0; i < this.options.crossDomainIdServers.length; i++) {
+    var domain = this.options.crossDomainIdServers[i];
+    if (getTld(domain) === currentTld) {
+      var writeKey = this.options.apiKey;
+      var url = 'https://' + domain + '/v1/saveId?writeKey=' + writeKey + '&xid=' + crossDomainId;
+
+      httpGet(url, function(err, res) {
+        if (err) {
+          self.debug('could not save id on %O, received %O', url, [err, res]);
+          return;
+        }
+
+        localstorage('seg_xid', crossDomainId);
+      });
+      return;
+    }
+  }
+};
+
+/**
+ * Deletes any state persisted by cross domain analytics.
+ * * seg_xid (and metadata) from cookies
+ * * seg_xid from localStorage
+ * * crossDomainId from traits in localStorage
+ *
+ * The deletion logic is run only if deletion is enabled for this project, and only
+ * deletes the data that actually exists.
+ *
+ * @api private
+ */
+Segment.prototype.deleteCrossDomainIdIfNeeded = function() {
+  // Only continue if deletion is enabled for this project.
+  if (!this.options.deleteCrossDomainId) {
+    return;
+  }
+
+  // Delete the xid cookie if it exists. We also delete associated metadata.
+  if (this.cookie('seg_xid')) {
+    this.cookie('seg_xid', null);
+    this.cookie('seg_xid_fd', null);
+    this.cookie('seg_xid_ts', null);
+  }
+
+  // Delete the xid from localStorage if it exists.
+  if (localstorage('seg_xid')) {
+    localstorage('seg_xid', null);
+  }
+
+  // Delete the crossDomainId trait in localStorage if it exists.
+  if (this.analytics.user().traits().crossDomainId) {
+    // This intentionally uses an internal API, so that
+    // we can avoid interacting with lower level localStorage APIs, and instead
+    // leverage existing functionality inside analytics.js.
+
+    var traits = this.analytics.user().traits();
+    delete traits.crossDomainId;
+    this.analytics.user()._setTraits(traits);
+  }
+};
+
+/**
+ * getCrossDomainIdFromServers
+ * @param {Array} domains
+ * @param {string} writeKey
+ * @param {function} callback => err, {domain, id}
+ */
+function getCrossDomainIdFromServerList(domains, writeKey, callback) {
+  // Should not happen but special case
+  if (domains.length === 0) {
+    callback(null, null);
+  }
+  var crossDomainIdFound = false;
+  var finishedRequests = 0;
+  var error = null;
+  for (var i=0; i<domains.length; i++) {
+    var domain = domains[i];
+
+    getCrossDomainIdFromSingleServer(domain, writeKey, function(err, res) {
+      finishedRequests++;
+      if (err) {
+        // if request against a particular domain fails, we won't early exit
+        // but rather wait and see if requests to other domains succeed
+        error = err;
+      } else if (res && res.id && !crossDomainIdFound) {
+        // If we found an xid from any of the servers, we'll just early exit and callback
+        crossDomainIdFound = true;
+        callback(null, res);
+      }
+      if (finishedRequests === domains.length && !crossDomainIdFound) {
+        // Error is non-null if we encountered an issue, otherwise error will be null
+        // meaning that no domains in the list has an xid for current user
+        callback(error, null);
+      }
+    });
+  }
+}
+
+/**
+ * getCrossDomainId
+ * @param {Array} domain
+ * @param {string} writeKey
+ * @param {function} callback => err, {domain, id}
+ */
+function getCrossDomainIdFromSingleServer(domain, writeKey, callback) {
+  var endpoint = 'https://' + domain + '/v1/id/' + writeKey;
+  getJson(endpoint, function(err, res) {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, {
+        domain: domain,
+        id: res && res.id || null
+      });
+    }
+  });
+}
+
+/**
+ * getJson
+ * @param {string} url
+ * @param {function} callback => err, json
+ */
+function getJson(url, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.withCredentials = true;
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        callback(null, xhr.responseText ? json.parse(xhr.responseText) : null);
+      } else {
+        callback(xhr.statusText || 'Unknown Error', null);
+      }
+    }
+  };
+  xhr.send();
+}
+
+/**
+ * get makes a get request to the given URL.
+ * @param {string} url
+ * @param {function} callback => err, response
+ */
+function httpGet(url, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.withCredentials = true;
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        callback(null, xhr.responseText);
+      } else {
+        callback(xhr.statusText || xhr.responseText || 'Unknown Error', null);
+      }
+    }
+  };
+  xhr.send();
+}
+
+/**
+ * getTld
+ * Get domain.com from subdomain.domain.com, etc.
+ * @param {string} domain
+ * @return {string} tld
+ */
+function getTld(domain) {
+  return domain.split('.').splice(-2).join('.');
+}
+
+},{"@ndhoule/extend":10,"@ndhoule/keys":13,"@segment/ad-params":17,"@segment/analytics.js-integration":43,"@segment/localstorage-retry":63,"@segment/protocol":72,"@segment/send-json":73,"@segment/top-domain":75,"@segment/utm-params":76,"component-clone":80,"component-cookie":81,"json3":105,"uuid":146,"yields-store":147}],43:[function(require,module,exports){
+arguments[4][32][0].apply(exports,arguments)
+},{"./protos":44,"./statics":45,"@ndhoule/clone":5,"@ndhoule/defaults":6,"@ndhoule/extend":10,"component-bind":79,"debug":47,"dup":32,"slug-component":133}],44:[function(require,module,exports){
+arguments[4][33][0].apply(exports,arguments)
+},{"@ndhoule/after":3,"@ndhoule/each":8,"@ndhoule/every":9,"@ndhoule/foldl":11,"@segment/fmt":57,"@segment/load-script":61,"analytics-events":46,"component-emitter":87,"dup":33,"is":104,"load-iframe":109,"next-tick":115,"to-no-case":138}],45:[function(require,module,exports){
+arguments[4][34][0].apply(exports,arguments)
+},{"@ndhoule/each":8,"@ndhoule/includes":12,"component-emitter":87,"domify":96,"dup":34}],46:[function(require,module,exports){
+arguments[4][35][0].apply(exports,arguments)
+},{"dup":35}],47:[function(require,module,exports){
+arguments[4][36][0].apply(exports,arguments)
+},{"./debug":48,"_process":118,"dup":36}],48:[function(require,module,exports){
+arguments[4][37][0].apply(exports,arguments)
+},{"dup":37,"ms":110}],49:[function(require,module,exports){
 'use strict';
 
 /**
@@ -6513,7 +7275,7 @@ function createIntegration(name) {
 
 module.exports = createIntegration;
 
-},{"./protos":42,"./statics":43,"@ndhoule/defaults":6,"component-bind":60,"debug":44,"extend":46,"slug-component":113}],42:[function(require,module,exports){
+},{"./protos":50,"./statics":51,"@ndhoule/defaults":6,"component-bind":79,"debug":52,"extend":54,"slug-component":133}],50:[function(require,module,exports){
 'use strict';
 
 /**
@@ -6976,7 +7738,7 @@ function render(template, locals) {
   }, {}, template.attrs);
 }
 
-},{"@ndhoule/after":3,"@ndhoule/each":8,"@ndhoule/every":9,"@ndhoule/foldl":11,"@segment/fmt":49,"@segment/load-script":53,"analytics-events":58,"component-emitter":67,"is":84,"load-iframe":89,"next-tick":95,"to-no-case":118}],43:[function(require,module,exports){
+},{"@ndhoule/after":3,"@ndhoule/each":8,"@ndhoule/every":9,"@ndhoule/foldl":11,"@segment/fmt":57,"@segment/load-script":61,"analytics-events":77,"component-emitter":87,"is":104,"load-iframe":109,"next-tick":115,"to-no-case":138}],51:[function(require,module,exports){
 'use strict';
 
 /**
@@ -7141,11 +7903,11 @@ function objectify(str) {
   };
 }
 
-},{"@ndhoule/each":8,"@ndhoule/includes":12,"component-emitter":67,"domify":76}],44:[function(require,module,exports){
-arguments[4][35][0].apply(exports,arguments)
-},{"./debug":45,"_process":98,"dup":35}],45:[function(require,module,exports){
+},{"@ndhoule/each":8,"@ndhoule/includes":12,"component-emitter":87,"domify":96}],52:[function(require,module,exports){
 arguments[4][36][0].apply(exports,arguments)
-},{"dup":36,"ms":90}],46:[function(require,module,exports){
+},{"./debug":53,"_process":118,"dup":36}],53:[function(require,module,exports){
+arguments[4][37][0].apply(exports,arguments)
+},{"dup":37,"ms":110}],54:[function(require,module,exports){
 'use strict';
 
 var hasOwn = Object.prototype.hasOwnProperty;
@@ -7233,7 +7995,7 @@ module.exports = function extend() {
 	return target;
 };
 
-},{}],47:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 var utf8Encode = require('utf8-encode');
 var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
@@ -7270,7 +8032,7 @@ function encode(input) {
 
     return output;
 }
-},{"utf8-encode":124}],48:[function(require,module,exports){
+},{"utf8-encode":144}],56:[function(require,module,exports){
 'use strict';
 
 /**
@@ -7294,7 +8056,7 @@ function canonical() {
 
 module.exports = canonical;
 
-},{}],49:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -7329,7 +8091,7 @@ fmt.d = parseInt;
 module.exports = fmt;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],50:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 'use strict';
 
 function isMeta(e) {
@@ -7357,7 +8119,7 @@ function isMeta(e) {
 
 module.exports = isMeta;
 
-},{}],51:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 'use strict';
 
 var type = require('component-type');
@@ -7434,7 +8196,7 @@ function array(arr, strict) {
   return arr;
 }
 
-},{"@segment/isodate":52,"component-each":65,"component-type":72}],52:[function(require,module,exports){
+},{"@segment/isodate":60,"component-each":85,"component-type":92}],60:[function(require,module,exports){
 'use strict';
 
 /**
@@ -7515,7 +8277,7 @@ exports.is = function(string, strict) {
   return matcher.test(string);
 };
 
-},{}],53:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 'use strict';
 
 /*
@@ -7587,7 +8349,825 @@ function loadScript(options, cb) {
 
 module.exports = loadScript;
 
-},{"component-type":72,"next-tick":95,"script-onload":100}],54:[function(require,module,exports){
+},{"component-type":92,"next-tick":115,"script-onload":120}],62:[function(require,module,exports){
+'use strict';
+
+var keys = require('@ndhoule/keys');
+var uuid = require('uuid').v4;
+
+var inMemoryStore = {
+  _data: {},
+  length: 0,
+  setItem: function(key, value) {
+    this._data[key] = value;
+    this.length = keys(this._data).length;
+    return value;
+  },
+  getItem: function(key) {
+    if (key in this._data) {
+      return this._data[key];
+    }
+    return null;
+  },
+  removeItem: function(key) {
+    if (key in this._data) {
+      delete this._data[key];
+    }
+    this.length = keys(this._data).length;
+    return null;
+  },
+  clear: function() {
+    this._data = {};
+    this.length = 0;
+  },
+  key: function(index) {
+    return keys(this._data)[index];
+  }
+};
+
+function isSupportedNatively() {
+  try {
+    if (!window.localStorage) return false;
+    var key = uuid();
+    window.localStorage.setItem(key, 'test_value');
+    var value = window.localStorage.getItem(key);
+    window.localStorage.removeItem(key);
+
+    // handle localStorage silently failing
+    return value === 'test_value';
+  } catch (e) {
+    // Can throw if localStorage is disabled
+    return false;
+  }
+}
+
+function pickStorage() {
+  if (isSupportedNatively()) {
+    return window.localStorage;
+  }
+  // fall back to in-memory
+  return inMemoryStore;
+}
+
+// Return a shared instance
+module.exports.defaultEngine = pickStorage();
+// Expose the in-memory store explicitly for testing
+module.exports.inMemoryEngine = inMemoryStore;
+
+},{"@ndhoule/keys":13,"uuid":66}],63:[function(require,module,exports){
+'use strict';
+
+var uuid = require('uuid').v4;
+var Store = require('./store');
+var each = require('@ndhoule/each');
+var Schedule = require('./schedule');
+var debug = require('debug')('localstorage-retry');
+var Emitter = require('component-emitter');
+
+// Some browsers don't support Function.prototype.bind, so just including a simplified version here
+function bind(func, obj) {
+  return function() {
+    return func.apply(obj, arguments);
+  };
+}
+
+/**
+ * @callback processFunc
+ * @param {Mixed} item The item added to the queue to process
+ * @param {Function} done A function to call when processing is completed.
+ *   @param {Error} Optional error parameter if the processing failed
+ *   @param {Response} Optional response parameter to emit for async handling
+ */
+
+/**
+ * Constructs a Queue backed by localStorage
+ *
+ * @constructor
+ * @param {String} name The name of the queue. Will be used to find abandoned queues and retry their items
+ * @param {processFunc} fn The function to call in order to process an item added to the queue
+ */
+function Queue(name, opts, fn) {
+  if (typeof opts === 'function') fn = opts;
+  this.name = name;
+  this.id = uuid();
+  this.fn = fn;
+  this.maxItems = opts.maxItems || Infinity;
+  this.maxAttempts = opts.maxAttempts || Infinity;
+
+  this.backoff = {
+    MIN_RETRY_DELAY: opts.minRetryDelay || 1000,
+    MAX_RETRY_DELAY: opts.maxRetryDelay || 30000,
+    FACTOR: opts.backoffFactor || 2,
+    JITTER: opts.backoffJitter || 0
+  };
+
+  // painstakingly tuned. that's why they're not "easily" configurable
+  this.timeouts = {
+    ACK_TIMER: 1000,
+    RECLAIM_TIMER: 3000,
+    RECLAIM_TIMEOUT: 10000,
+    RECLAIM_WAIT: 500
+  };
+
+  this.keys = {
+    IN_PROGRESS: 'inProgress',
+    QUEUE: 'queue',
+    ACK: 'ack',
+    RECLAIM_START: 'reclaimStart',
+    RECLAIM_END: 'reclaimEnd'
+  };
+
+  this._schedule = new Schedule();
+  this._processId = 0;
+
+  // Set up our empty queues
+  this._store = new Store(this.name, this.id, this.keys);
+  this._store.set(this.keys.IN_PROGRESS, {});
+  this._store.set(this.keys.QUEUE, []);
+
+  // bind recurring tasks for ease of use
+  this._ack = bind(this._ack, this);
+  this._checkReclaim = bind(this._checkReclaim, this);
+  this._processHead = bind(this._processHead, this);
+
+  this._running = false;
+}
+
+/**
+ * Mix in event emitter
+ */
+
+Emitter(Queue.prototype);
+
+/**
+ * Starts processing the queue
+ */
+Queue.prototype.start = function() {
+  if (this._running) {
+    this.stop();
+  }
+  this._running = true;
+  this._ack();
+  this._checkReclaim();
+  this._processHead();
+};
+
+/**
+ * Stops processing the queue
+ */
+Queue.prototype.stop = function() {
+  this._schedule.cancelAll();
+  this._running = false;
+};
+
+/**
+ * Decides whether to retry. Overridable.
+ *
+ * @param {Object} item The item being processed
+ * @param {Number} attemptNumber The attemptNumber (1 for first retry)
+ * @param {Error} error The error from previous attempt, if there was one
+ * @return {Boolean} Whether to requeue the message
+ */
+Queue.prototype.shouldRetry = function(_, attemptNumber) {
+  if (attemptNumber > this.maxAttempts) return false;
+  return true;
+};
+
+/**
+ * Calculates the delay (in ms) for a retry attempt
+ *
+ * @param {Number} attemptNumber The attemptNumber (1 for first retry)
+ * @return {Number} The delay in milliseconds to wait before attempting a retry
+ */
+Queue.prototype.getDelay = function(attemptNumber) {
+  var ms = this.backoff.MIN_RETRY_DELAY * Math.pow(this.backoff.FACTOR, attemptNumber);
+  if (this.backoff.JITTER) {
+    var rand =  Math.random();
+    var deviation = Math.floor(rand * this.backoff.JITTER * ms);
+    if (Math.floor(rand * 10) < 5) {
+      ms -= deviation;
+    } else {
+      ms += deviation;
+    }
+  }
+  return Number(Math.min(ms, this.backoff.MAX_RETRY_DELAY).toPrecision(1));
+};
+
+/**
+ * Adds an item to the queue
+ *
+ * @param {Mixed} item The item to process
+ */
+Queue.prototype.addItem = function(item) {
+  this._enqueue({
+    item: item,
+    attemptNumber: 0,
+    time: this._schedule.now()
+  });
+};
+
+/**
+ * Adds an item to the retry queue
+ *
+ * @param {Mixed} item The item to retry
+ * @param {Number} attemptNumber The attempt number (1 for first retry)
+ * @param {Error} [error] The error from previous attempt, if there was one
+ */
+Queue.prototype.requeue = function(item, attemptNumber, error) {
+  if (this.shouldRetry(item, attemptNumber, error)) {
+    this._enqueue({
+      item: item,
+      attemptNumber: attemptNumber,
+      time: this._schedule.now() + this.getDelay(attemptNumber)
+    });
+  } else {
+    this.emit('discard', item, attemptNumber);
+  }
+};
+
+Queue.prototype._enqueue = function(entry) {
+  var queue = this._store.get(this.keys.QUEUE) || [];
+  queue = queue.slice(-(this.maxItems - 1));
+  queue.push(entry);
+  queue = queue.sort(function(a,b) {
+    return a.time - b.time;
+  });
+
+  this._store.set(this.keys.QUEUE, queue);
+
+  if (this._running) {
+    this._processHead();
+  }
+};
+
+Queue.prototype._processHead = function() {
+  var self = this;
+  var store = this._store;
+
+  // cancel the scheduled task if it exists
+  this._schedule.cancel(this._processId);
+
+  // Pop the head off the queue
+  var queue = store.get(this.keys.QUEUE) || [];
+  var inProgress = store.get(this.keys.IN_PROGRESS) || {};
+  var now = this._schedule.now();
+  var toRun = [];
+
+  function enqueue(el, id) {
+    toRun.push({
+      item: el.item,
+      done: function handle(err, res) {
+        var inProgress = store.get(self.keys.IN_PROGRESS) || {};
+        delete inProgress[id];
+        store.set(self.keys.IN_PROGRESS, inProgress);
+        self.emit('processed', err, res, el.item);
+        if (err) {
+          self.requeue(el.item, el.attemptNumber + 1, err);
+        }
+      }
+    });
+  }
+
+  var inProgressSize = Object.keys(inProgress).length;
+
+  while (queue.length && queue[0].time <= now && inProgressSize++ < self.maxItems) {
+    var el = queue.shift();
+    var id = uuid();
+
+    // Save this to the in progress map
+    inProgress[id] = {
+      item: el.item,
+      attemptNumber: el.attemptNumber,
+      time: self._schedule.now()
+    };
+
+    enqueue(el, id);
+  }
+
+  store.set(this.keys.QUEUE, queue);
+  store.set(this.keys.IN_PROGRESS, inProgress);
+
+  each(function(el) {
+    // TODO: handle fn timeout
+    try {
+      self.fn(el.item, el.done);
+    } catch (err) {
+      debug('Process function threw error: ' + err);
+    }
+  }, toRun);
+
+  // re-read the queue in case the process function finished immediately or added another item
+  queue = store.get(this.keys.QUEUE) || [];
+  this._schedule.cancel(this._processId);
+  if (queue.length > 0) {
+    this._processId = this._schedule.run(this._processHead, queue[0].time - now);
+  }
+};
+
+// Ack continuously to prevent other tabs from claiming our queue
+Queue.prototype._ack = function() {
+  this._store.set(this.keys.ACK, this._schedule.now());
+  this._store.set(this.keys.RECLAIM_START, null);
+  this._store.set(this.keys.RECLAIM_END, null);
+  this._schedule.run(this._ack, this.timeouts.ACK_TIMER);
+};
+
+Queue.prototype._checkReclaim = function() {
+  var self = this;
+
+  function tryReclaim(store) {
+    store.set(self.keys.RECLAIM_START, self.id);
+    store.set(self.keys.ACK, self._schedule.now());
+
+    self._schedule.run(function() {
+      if (store.get(self.keys.RECLAIM_START) !== self.id) return;
+      store.set(self.keys.RECLAIM_END, self.id);
+
+      self._schedule.run(function() {
+        if (store.get(self.keys.RECLAIM_END) !== self.id) return;
+        if (store.get(self.keys.RECLAIM_START) !== self.id) return;
+        self._reclaim(store.id);
+      }, self.timeouts.RECLAIM_WAIT);
+    }, self.timeouts.RECLAIM_WAIT);
+  }
+
+  function findOtherQueues(name) {
+    var res = [];
+    var storage = self._store.engine;
+    for (var i = 0; i < storage.length; i++) {
+      var k = storage.key(i);
+      var parts = k.split('.');
+      if (parts.length !== 3) continue;
+      if (parts[0] !== name) continue;
+      if (parts[2] !== 'ack') continue;
+      res.push(new Store(name, parts[1], self.keys));
+    }
+    return res;
+  }
+
+  each(function(store) {
+    if (store.id === self.id) return;
+    if (self._schedule.now() - store.get(self.keys.ACK) < self.timeouts.RECLAIM_TIMEOUT) return;
+    tryReclaim(store);
+  }, findOtherQueues(this.name));
+
+  this._schedule.run(this._checkReclaim, this.timeouts.RECLAIM_TIMER);
+};
+
+Queue.prototype._reclaim = function(id) {
+  var self = this;
+  var other = new Store(this.name, id, this.keys);
+
+  var our = {
+    queue: this._store.get(this.keys.QUEUE) || []
+  };
+
+  var their = {
+    inProgress: other.get(this.keys.IN_PROGRESS) || {},
+    queue: other.get(this.keys.QUEUE) || []
+  };
+
+  // add their queue to ours, resetting run-time to immediate and copying the attempt#
+  each(function(el) {
+    our.queue.push({
+      item: el.item,
+      attemptNumber: el.attemptNumber,
+      time: self._schedule.now()
+    });
+  }, their.queue);
+
+  // if the queue is abandoned, all the in-progress are failed. retry them immediately and increment the attempt#
+  each(function(el) {
+    our.queue.push({
+      item: el.item,
+      attemptNumber: el.attemptNumber + 1,
+      time: self._schedule.now()
+    });
+  }, their.inProgress);
+
+  our.queue = our.queue.sort(function(a,b) {
+    return a.time - b.time;
+  });
+
+  this._store.set(this.keys.QUEUE, our.queue);
+
+  // remove all keys
+  other.remove(this.keys.ACK);
+  other.remove(this.keys.RECLAIM_START);
+  other.remove(this.keys.RECLAIM_END);
+  other.remove(this.keys.IN_PROGRESS);
+  other.remove(this.keys.QUEUE);
+
+  // process the new items we claimed
+  this._processHead();
+};
+
+module.exports = Queue;
+
+},{"./schedule":64,"./store":65,"@ndhoule/each":8,"component-emitter":87,"debug":95,"uuid":66}],64:[function(require,module,exports){
+'use strict';
+
+var each = require('@ndhoule/each');
+
+var defaultClock = {
+  setTimeout: function(fn, ms) {
+    return window.setTimeout(fn, ms);
+  },
+  clearTimeout: function(id) {
+    return window.clearTimeout(id);
+  },
+  Date: window.Date
+};
+
+var clock = defaultClock;
+
+function Schedule() {
+  this.tasks = {};
+  this.nextId = 1;
+}
+
+Schedule.prototype.now = function() {
+  return +new clock.Date();
+};
+
+Schedule.prototype.run = function(task, timeout) {
+  var id = this.nextId++;
+  this.tasks[id] = clock.setTimeout(this._handle(id, task), timeout);
+  return id;
+};
+
+Schedule.prototype.cancel = function(id) {
+  if (this.tasks[id]) {
+    clock.clearTimeout(this.tasks[id]);
+    delete this.tasks[id];
+  }
+};
+
+Schedule.prototype.cancelAll = function() {
+  each(clock.clearTimeout, this.tasks);
+  this.tasks = {};
+};
+
+Schedule.prototype._handle = function(id, callback) {
+  var self = this;
+  return function() {
+    delete self.tasks[id];
+    return callback();
+  };
+};
+
+Schedule.setClock = function(newClock) {
+  clock = newClock;
+};
+
+Schedule.resetClock = function() {
+  clock = defaultClock;
+};
+
+module.exports = Schedule;
+
+},{"@ndhoule/each":8}],65:[function(require,module,exports){
+'use strict';
+
+var defaultEngine = require('./engine').defaultEngine;
+var inMemoryEngine = require('./engine').inMemoryEngine;
+var each = require('@ndhoule/each');
+var keys = require('@ndhoule/keys');
+var json = require('json3');
+
+/**
+* Store Implementation with dedicated
+*/
+
+function Store(name, id, keys, optionalEngine) {
+  this.id = id;
+  this.name = name;
+  this.keys = keys || {};
+  this.engine = optionalEngine || defaultEngine;
+}
+
+/**
+* Set value by key.
+*/
+
+Store.prototype.set = function(key, value) {
+  var compoundKey = this._createValidKey(key);
+  if (!compoundKey) return;
+  try {
+    this.engine.setItem(compoundKey, json.stringify(value));
+  } catch (err) {
+    if (isQuotaExceeded(err)) {
+      // switch to inMemory engine
+      this._swapEngine();
+      // and save it there
+      this.set(key, value);
+    }
+  }
+};
+
+/**
+* Get by Key.
+*/
+
+Store.prototype.get = function(key) {
+  try {
+    var str = this.engine.getItem(this._createValidKey(key));
+    if (str === null) {
+      return null;
+    }
+    return json.parse(str);
+  } catch (err) {
+    return null;
+  }
+};
+
+/**
+* Remove by Key.
+*/
+
+Store.prototype.remove = function(key) {
+  this.engine.removeItem(this._createValidKey(key));
+};
+
+/**
+* Ensure the key is valid
+*/
+
+Store.prototype._createValidKey = function(key) {
+  var name = this.name;
+  var id = this.id;
+
+  if (!keys(this.keys).length) return [name, id, key].join('.');
+
+  // validate and return undefined if invalid key
+  var compoundKey;
+  each(function(value) {
+    if (value === key) {
+      compoundKey = [name, id, key].join('.');
+    }
+  }, this.keys);
+  return compoundKey;
+};
+
+/**
+* Switch to inMemoryEngine, bringing any existing data with.
+*/
+
+Store.prototype._swapEngine = function() {
+  var self = this;
+
+  // grab existing data, but only for this page's queue instance, not all
+  // better to keep other queues in localstorage to be flushed later
+  // than to pull them into memory and remove them from durable storage
+  each(function(key) {
+    var value = self.get(key);
+    inMemoryEngine.setItem([self.name, self.id, key].join('.'), value);
+    self.remove(key);
+  }, this.keys);
+
+  this.engine = inMemoryEngine;
+};
+
+module.exports = Store;
+
+function isQuotaExceeded(e) {
+  var quotaExceeded = false;
+  if (e.code) {
+    switch (e.code) {
+    case 22:
+      quotaExceeded = true;
+      break;
+    case 1014:
+      // Firefox
+      if (e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+        quotaExceeded = true;
+      }
+      break;
+    default:
+      break;
+    }
+  } else if (e.number === -2147024882) {
+    // Internet Explorer 8
+    quotaExceeded = true;
+  }
+  return quotaExceeded;
+}
+
+},{"./engine":62,"@ndhoule/each":8,"@ndhoule/keys":13,"json3":105}],66:[function(require,module,exports){
+var v1 = require('./v1');
+var v4 = require('./v4');
+
+var uuid = v4;
+uuid.v1 = v1;
+uuid.v4 = v4;
+
+module.exports = uuid;
+
+},{"./v1":69,"./v4":70}],67:[function(require,module,exports){
+/**
+ * Convert array of 16 byte values to UUID string format of the form:
+ * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+ */
+var byteToHex = [];
+for (var i = 0; i < 256; ++i) {
+  byteToHex[i] = (i + 0x100).toString(16).substr(1);
+}
+
+function bytesToUuid(buf, offset) {
+  var i = offset || 0;
+  var bth = byteToHex;
+  // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
+  return ([bth[buf[i++]], bth[buf[i++]], 
+	bth[buf[i++]], bth[buf[i++]], '-',
+	bth[buf[i++]], bth[buf[i++]], '-',
+	bth[buf[i++]], bth[buf[i++]], '-',
+	bth[buf[i++]], bth[buf[i++]], '-',
+	bth[buf[i++]], bth[buf[i++]],
+	bth[buf[i++]], bth[buf[i++]],
+	bth[buf[i++]], bth[buf[i++]]]).join('');
+}
+
+module.exports = bytesToUuid;
+
+},{}],68:[function(require,module,exports){
+// Unique ID creation requires a high quality random # generator.  In the
+// browser this is a little complicated due to unknown quality of Math.random()
+// and inconsistent support for the `crypto` API.  We do the best we can via
+// feature-detection
+
+// getRandomValues needs to be invoked in a context where "this" is a Crypto
+// implementation. Also, find the complete implementation of crypto on IE11.
+var getRandomValues = (typeof(crypto) != 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto)) ||
+                      (typeof(msCrypto) != 'undefined' && typeof window.msCrypto.getRandomValues == 'function' && msCrypto.getRandomValues.bind(msCrypto));
+
+if (getRandomValues) {
+  // WHATWG crypto RNG - http://wiki.whatwg.org/wiki/Crypto
+  var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
+
+  module.exports = function whatwgRNG() {
+    getRandomValues(rnds8);
+    return rnds8;
+  };
+} else {
+  // Math.random()-based (RNG)
+  //
+  // If all else fails, use Math.random().  It's fast, but is of unspecified
+  // quality.
+  var rnds = new Array(16);
+
+  module.exports = function mathRNG() {
+    for (var i = 0, r; i < 16; i++) {
+      if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
+      rnds[i] = r >>> ((i & 0x03) << 3) & 0xff;
+    }
+
+    return rnds;
+  };
+}
+
+},{}],69:[function(require,module,exports){
+var rng = require('./lib/rng');
+var bytesToUuid = require('./lib/bytesToUuid');
+
+// **`v1()` - Generate time-based UUID**
+//
+// Inspired by https://github.com/LiosK/UUID.js
+// and http://docs.python.org/library/uuid.html
+
+var _nodeId;
+var _clockseq;
+
+// Previous uuid creation time
+var _lastMSecs = 0;
+var _lastNSecs = 0;
+
+// See https://github.com/broofa/node-uuid for API details
+function v1(options, buf, offset) {
+  var i = buf && offset || 0;
+  var b = buf || [];
+
+  options = options || {};
+  var node = options.node || _nodeId;
+  var clockseq = options.clockseq !== undefined ? options.clockseq : _clockseq;
+
+  // node and clockseq need to be initialized to random values if they're not
+  // specified.  We do this lazily to minimize issues related to insufficient
+  // system entropy.  See #189
+  if (node == null || clockseq == null) {
+    var seedBytes = rng();
+    if (node == null) {
+      // Per 4.5, create and 48-bit node id, (47 random bits + multicast bit = 1)
+      node = _nodeId = [
+        seedBytes[0] | 0x01,
+        seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]
+      ];
+    }
+    if (clockseq == null) {
+      // Per 4.2.2, randomize (14 bit) clockseq
+      clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 0x3fff;
+    }
+  }
+
+  // UUID timestamps are 100 nano-second units since the Gregorian epoch,
+  // (1582-10-15 00:00).  JSNumbers aren't precise enough for this, so
+  // time is handled internally as 'msecs' (integer milliseconds) and 'nsecs'
+  // (100-nanoseconds offset from msecs) since unix epoch, 1970-01-01 00:00.
+  var msecs = options.msecs !== undefined ? options.msecs : new Date().getTime();
+
+  // Per 4.2.1.2, use count of uuid's generated during the current clock
+  // cycle to simulate higher resolution clock
+  var nsecs = options.nsecs !== undefined ? options.nsecs : _lastNSecs + 1;
+
+  // Time since last uuid creation (in msecs)
+  var dt = (msecs - _lastMSecs) + (nsecs - _lastNSecs)/10000;
+
+  // Per 4.2.1.2, Bump clockseq on clock regression
+  if (dt < 0 && options.clockseq === undefined) {
+    clockseq = clockseq + 1 & 0x3fff;
+  }
+
+  // Reset nsecs if clock regresses (new clockseq) or we've moved onto a new
+  // time interval
+  if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === undefined) {
+    nsecs = 0;
+  }
+
+  // Per 4.2.1.2 Throw error if too many uuids are requested
+  if (nsecs >= 10000) {
+    throw new Error('uuid.v1(): Can\'t create more than 10M uuids/sec');
+  }
+
+  _lastMSecs = msecs;
+  _lastNSecs = nsecs;
+  _clockseq = clockseq;
+
+  // Per 4.1.4 - Convert from unix epoch to Gregorian epoch
+  msecs += 12219292800000;
+
+  // `time_low`
+  var tl = ((msecs & 0xfffffff) * 10000 + nsecs) % 0x100000000;
+  b[i++] = tl >>> 24 & 0xff;
+  b[i++] = tl >>> 16 & 0xff;
+  b[i++] = tl >>> 8 & 0xff;
+  b[i++] = tl & 0xff;
+
+  // `time_mid`
+  var tmh = (msecs / 0x100000000 * 10000) & 0xfffffff;
+  b[i++] = tmh >>> 8 & 0xff;
+  b[i++] = tmh & 0xff;
+
+  // `time_high_and_version`
+  b[i++] = tmh >>> 24 & 0xf | 0x10; // include version
+  b[i++] = tmh >>> 16 & 0xff;
+
+  // `clock_seq_hi_and_reserved` (Per 4.2.2 - include variant)
+  b[i++] = clockseq >>> 8 | 0x80;
+
+  // `clock_seq_low`
+  b[i++] = clockseq & 0xff;
+
+  // `node`
+  for (var n = 0; n < 6; ++n) {
+    b[i + n] = node[n];
+  }
+
+  return buf ? buf : bytesToUuid(b);
+}
+
+module.exports = v1;
+
+},{"./lib/bytesToUuid":67,"./lib/rng":68}],70:[function(require,module,exports){
+var rng = require('./lib/rng');
+var bytesToUuid = require('./lib/bytesToUuid');
+
+function v4(options, buf, offset) {
+  var i = buf && offset || 0;
+
+  if (typeof(options) == 'string') {
+    buf = options === 'binary' ? new Array(16) : null;
+    options = null;
+  }
+  options = options || {};
+
+  var rnds = options.random || (options.rng || rng)();
+
+  // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+  rnds[6] = (rnds[6] & 0x0f) | 0x40;
+  rnds[8] = (rnds[8] & 0x3f) | 0x80;
+
+  // Copy bytes to buffer, if provided
+  if (buf) {
+    for (var ii = 0; ii < 16; ++ii) {
+      buf[i + ii] = rnds[ii];
+    }
+  }
+
+  return buf || bytesToUuid(rnds);
+}
+
+module.exports = v4;
+
+},{"./lib/bytesToUuid":67,"./lib/rng":68}],71:[function(require,module,exports){
 'use strict';
 
 /**
@@ -7612,7 +9192,92 @@ function preventDefault(e) {
 
 module.exports = preventDefault;
 
-},{}],55:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
+'use strict';
+
+/**
+ * Convenience alias
+ */
+
+var define = Object.defineProperty;
+
+
+/**
+ *  The base protocol
+ */
+
+var initialProtocol = window.location.protocol;
+
+/**
+ * Fallback mocked protocol in case Object.defineProperty doesn't exist.
+ */
+
+var mockedProtocol;
+
+
+module.exports = function(protocol) {
+  if (arguments.length === 0) {
+    return get();
+  }
+  return set(protocol);
+};
+
+
+/**
+ * Sets the protocol to be http:
+ */
+
+module.exports.http = function() {
+  set('http:');
+};
+
+
+/**
+ * Sets the protocol to be https:
+ */
+
+module.exports.https = function() {
+  set('https:');
+};
+
+
+/**
+ * Reset to the initial protocol.
+ */
+
+module.exports.reset = function() {
+  set(initialProtocol);
+};
+
+
+/**
+ * Gets the current protocol, using the fallback and then the native protocol.
+ *
+ * @return {String} protocol
+ */
+
+function get() {
+  return mockedProtocol || window.location.protocol;
+}
+
+
+/**
+ * Sets the protocol
+ *
+ * @param {String} protocol
+ */
+
+function set(protocol) {
+  try {
+    define(window.location, 'protocol', {
+      get: function() { return protocol; }
+    });
+  } catch (err) {
+    mockedProtocol = protocol;
+  }
+}
+
+},{}],73:[function(require,module,exports){
 'use strict';
 
 /*
@@ -7730,7 +9395,7 @@ function encode(obj) {
   return encodeURIComponent(str);
 }
 
-},{"@segment/base64-encode":47,"has-cors":81,"json3":85,"jsonp":86}],56:[function(require,module,exports){
+},{"@segment/base64-encode":55,"has-cors":101,"json3":105,"jsonp":106}],74:[function(require,module,exports){
 (function (global){
 "use strict"
 
@@ -7903,7 +9568,7 @@ module.exports = (function() {
 }())
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"json3":85}],57:[function(require,module,exports){
+},{"json3":105}],75:[function(require,module,exports){
 'use strict';
 
 /**
@@ -8003,7 +9668,86 @@ domain.cookie = cookie;
 
 exports = module.exports = domain;
 
-},{"component-cookie":61,"component-url":73}],58:[function(require,module,exports){
+},{"component-cookie":81,"component-url":93}],76:[function(require,module,exports){
+'use strict';
+
+/**
+ * Module dependencies.
+ */
+
+var foldl = require('@ndhoule/foldl');
+var parse = require('component-querystring').parse;
+
+/**
+ * hasOwnProperty reference.
+ */
+
+var has = Object.prototype.hasOwnProperty;
+
+/**
+ * Get all utm params from the given `querystring`
+ *
+ * @param {String} query
+ * @return {Object}
+ * @api private
+ */
+
+function utm(query) {
+  // Remove leading ? if present
+  if (query.charAt(0) === '?') {
+    query = query.substring(1);
+  }
+
+  query = query.replace(/\?/g, '&');
+
+  var param;
+  var params = parse(query);
+  var results = {};
+
+  for (var key in params) {
+    if (has.call(params, key)) {
+      if (key.substr(0, 4) === 'utm_') {
+        param = key.substr(4);
+        if (param === 'campaign') param = 'name';
+        results[param] = params[key];
+      }
+    }
+  }
+
+  return results;
+}
+
+var allowedKeys = {
+  name: true,
+  term: true,
+  source: true,
+  medium: true,
+  content: true
+};
+
+/**
+ * Get strict utm params - from the given `querystring`
+ *
+ * @param {String} query
+ * @return {Object}
+ * @api private
+ */
+
+function strict(query) {
+  return foldl(function(acc, val, key) {
+    if (has.call(allowedKeys, key)) acc[key] = val;
+    return acc;
+  }, {}, utm(query));
+}
+
+/*
+ * Exports.
+ */
+
+module.exports = utm;
+module.exports.strict = strict;
+
+},{"@ndhoule/foldl":11,"component-querystring":90}],77:[function(require,module,exports){
 'use strict';
 
 /**
@@ -8325,7 +10069,7 @@ module.exports = foldl(function transform(ret, pairs, method) {
   return ret;
 }, {}, eventMap);
 
-},{"@ndhoule/foldl":11,"@ndhoule/map":14}],59:[function(require,module,exports){
+},{"@ndhoule/foldl":11,"@ndhoule/map":14}],78:[function(require,module,exports){
 'use strict';
 
 var bind = require('component-bind');
@@ -8343,7 +10087,7 @@ function bindAll(obj) {
 
 module.exports = bindAll;
 
-},{"component-bind":60}],60:[function(require,module,exports){
+},{"component-bind":79}],79:[function(require,module,exports){
 /**
  * Slice reference.
  */
@@ -8368,7 +10112,66 @@ module.exports = function(obj, fn){
   }
 };
 
-},{}],61:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
+/**
+ * Module dependencies.
+ */
+
+var type;
+try {
+  type = require('component-type');
+} catch (_) {
+  type = require('type');
+}
+
+/**
+ * Module exports.
+ */
+
+module.exports = clone;
+
+/**
+ * Clones objects.
+ *
+ * @param {Mixed} any object
+ * @api public
+ */
+
+function clone(obj){
+  switch (type(obj)) {
+    case 'object':
+      var copy = {};
+      for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+          copy[key] = clone(obj[key]);
+        }
+      }
+      return copy;
+
+    case 'array':
+      var copy = new Array(obj.length);
+      for (var i = 0, l = obj.length; i < l; i++) {
+        copy[i] = clone(obj[i]);
+      }
+      return copy;
+
+    case 'regexp':
+      // from millermedeiros/amd-utils - MIT
+      var flags = '';
+      flags += obj.multiline ? 'm' : '';
+      flags += obj.global ? 'g' : '';
+      flags += obj.ignoreCase ? 'i' : '';
+      return new RegExp(obj.source, flags);
+
+    case 'date':
+      return new Date(obj.getTime());
+
+    default: // string, number, boolean, …
+      return obj;
+  }
+}
+
+},{"component-type":92,"type":92}],81:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -8501,7 +10304,7 @@ function decode(value) {
   }
 }
 
-},{"debug":62}],62:[function(require,module,exports){
+},{"debug":82}],82:[function(require,module,exports){
 
 /**
  * This is the web browser implementation of `debug()`.
@@ -8671,7 +10474,7 @@ function localstorage(){
   } catch (e) {}
 }
 
-},{"./debug":63}],63:[function(require,module,exports){
+},{"./debug":83}],83:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -8870,7 +10673,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":64}],64:[function(require,module,exports){
+},{"ms":84}],84:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -8997,7 +10800,7 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],65:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -9088,7 +10891,7 @@ function array(obj, fn, ctx) {
   }
 }
 
-},{"component-type":66,"to-function":117,"type":66}],66:[function(require,module,exports){
+},{"component-type":86,"to-function":137,"type":86}],86:[function(require,module,exports){
 
 /**
  * toString ref.
@@ -9122,7 +10925,7 @@ module.exports = function(val){
   return typeof val;
 };
 
-},{}],67:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -9299,7 +11102,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],68:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
     unbind = window.removeEventListener ? 'removeEventListener' : 'detachEvent',
     prefix = bind !== 'addEventListener' ? 'on' : '';
@@ -9335,7 +11138,7 @@ exports.unbind = function(el, type, fn, capture){
   el[unbind](prefix + type, fn, capture || false);
   return fn;
 };
-},{}],69:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 /**
  * Global Names
  */
@@ -9422,7 +11225,7 @@ function prefixed(str) {
   };
 }
 
-},{}],70:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -9529,7 +11332,7 @@ exports.stringify = function(obj){
   return pairs.join('&');
 };
 
-},{"trim":121,"type":71}],71:[function(require,module,exports){
+},{"trim":141,"type":91}],91:[function(require,module,exports){
 /**
  * toString ref.
  */
@@ -9565,7 +11368,7 @@ module.exports = function(val){
   return typeof val;
 };
 
-},{}],72:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 /**
  * toString ref.
  */
@@ -9613,7 +11416,7 @@ function isBuffer(obj) {
     ))
 }
 
-},{}],73:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 
 /**
  * Parse the given `url`.
@@ -9697,7 +11500,7 @@ function port (protocol){
   }
 }
 
-},{}],74:[function(require,module,exports){
+},{}],94:[function(require,module,exports){
 /*
  * Date Format 1.2.3
  * (c) 2007-2009 Steven Levithan <stevenlevithan.com>
@@ -9925,7 +11728,7 @@ function kindOf(val) {
   }
 })(this);
 
-},{}],75:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 
 /**
  * Expose `debug()` as the module.
@@ -10064,7 +11867,7 @@ try {
   if (window.localStorage) debug.enable(localStorage.debug);
 } catch(e){}
 
-},{}],76:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 
 /**
  * Expose `parse`.
@@ -10178,7 +11981,7 @@ function parse(html, doc) {
   return fragment;
 }
 
-},{}],77:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 'use strict';
 
 var hasOwn = Object.prototype.hasOwnProperty;
@@ -10297,7 +12100,7 @@ module.exports = function extend() {
 	return target;
 };
 
-},{}],78:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -10334,11 +12137,11 @@ function generate (name, options) {
   };
 }
 
-},{"debug":79}],79:[function(require,module,exports){
-arguments[4][35][0].apply(exports,arguments)
-},{"./debug":80,"_process":98,"dup":35}],80:[function(require,module,exports){
+},{"debug":99}],99:[function(require,module,exports){
 arguments[4][36][0].apply(exports,arguments)
-},{"dup":36,"ms":90}],81:[function(require,module,exports){
+},{"./debug":100,"_process":118,"dup":36}],100:[function(require,module,exports){
+arguments[4][37][0].apply(exports,arguments)
+},{"dup":37,"ms":110}],101:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -10357,7 +12160,7 @@ try {
   module.exports = false;
 }
 
-},{}],82:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -10386,12 +12189,12 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],83:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 
 module.exports = function isEmail (string) {
     return (/.+\@.+\..+/).test(string);
 };
-},{}],84:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 /* globals window, HTMLElement */
 
 'use strict';
@@ -11211,7 +13014,7 @@ is.bigint = function (value) {
 
 module.exports = is;
 
-},{}],85:[function(require,module,exports){
+},{}],105:[function(require,module,exports){
 (function (global){
 /*! JSON v3.3.2 | https://bestiejs.github.io/json3 | Copyright 2012-2015, Kit Cambridge, Benjamin Tan | http://kit.mit-license.org */
 ;(function () {
@@ -12153,7 +13956,7 @@ module.exports = is;
 }).call(this);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],86:[function(require,module,exports){
+},{}],106:[function(require,module,exports){
 /**
  * Module dependencies
  */
@@ -12252,11 +14055,11 @@ function jsonp(url, opts, fn){
   return cancel;
 }
 
-},{"debug":87}],87:[function(require,module,exports){
-arguments[4][35][0].apply(exports,arguments)
-},{"./debug":88,"_process":98,"dup":35}],88:[function(require,module,exports){
+},{"debug":107}],107:[function(require,module,exports){
 arguments[4][36][0].apply(exports,arguments)
-},{"dup":36,"ms":90}],89:[function(require,module,exports){
+},{"./debug":108,"_process":118,"dup":36}],108:[function(require,module,exports){
+arguments[4][37][0].apply(exports,arguments)
+},{"dup":37,"ms":110}],109:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -12318,7 +14121,7 @@ module.exports = function loadIframe(options, fn){
   return iframe;
 };
 
-},{"is":84,"next-tick":95,"script-onload":100}],90:[function(require,module,exports){
+},{"is":104,"next-tick":115,"script-onload":120}],110:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -12472,7 +14275,7 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],91:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
 'use strict';
 
 var is = require('is');
@@ -12517,7 +14320,7 @@ function toMs(num) {
   return num;
 }
 
-},{"./milliseconds":92,"./seconds":93,"@segment/isodate":94,"is":84}],92:[function(require,module,exports){
+},{"./milliseconds":112,"./seconds":113,"@segment/isodate":114,"is":104}],112:[function(require,module,exports){
 'use strict';
 
 /**
@@ -12549,7 +14352,7 @@ exports.parse = function(millis) {
   return new Date(millis);
 };
 
-},{}],93:[function(require,module,exports){
+},{}],113:[function(require,module,exports){
 'use strict';
 
 /**
@@ -12581,7 +14384,7 @@ exports.parse = function(seconds) {
   return new Date(millis);
 };
 
-},{}],94:[function(require,module,exports){
+},{}],114:[function(require,module,exports){
 'use strict';
 
 /**
@@ -12659,7 +14462,7 @@ exports.is = function(string, strict) {
   return matcher.test(string);
 };
 
-},{}],95:[function(require,module,exports){
+},{}],115:[function(require,module,exports){
 (function (process,setImmediate){
 'use strict';
 
@@ -12727,7 +14530,7 @@ module.exports = (function () {
 }());
 
 }).call(this,require('_process'),require("timers").setImmediate)
-},{"_process":98,"timers":115}],96:[function(require,module,exports){
+},{"_process":118,"timers":135}],116:[function(require,module,exports){
 
 var identity = function(_){ return _; };
 
@@ -12881,7 +14684,7 @@ function isFunction(val) {
   return typeof val === 'function';
 }
 
-},{}],97:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 
 /**
  * HOP ref.
@@ -12966,7 +14769,7 @@ exports.length = function(obj){
 exports.isEmpty = function(obj){
   return 0 == exports.length(obj);
 };
-},{}],98:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -13152,7 +14955,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],99:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -13255,7 +15058,7 @@ function compact(value){
   return null == value;
 }
 
-},{"type-component":122}],100:[function(require,module,exports){
+},{"type-component":142}],120:[function(require,module,exports){
 
 // https://github.com/thirdpartyjs/thirdpartyjs-code/blob/master/examples/templates/02/loading-files/index.html
 
@@ -13310,7 +15113,7 @@ function attach(el, fn){
   });
 }
 
-},{}],101:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 'use strict';
 
 var get = require('obj-case');
@@ -13346,7 +15149,7 @@ module.exports = function(proto) {
   }
 };
 
-},{"obj-case":96}],102:[function(require,module,exports){
+},{"obj-case":116}],122:[function(require,module,exports){
 'use strict';
 
 var inherit = require('./utils').inherit;
@@ -13427,7 +15230,7 @@ Alias.prototype.to = Alias.prototype.userId;
 
 module.exports = Alias;
 
-},{"./facade":104,"./utils":112}],103:[function(require,module,exports){
+},{"./facade":124,"./utils":132}],123:[function(require,module,exports){
 'use strict';
 
 var inherit = require('./utils').inherit;
@@ -13461,7 +15264,7 @@ Delete.prototype.type = function() {
 
 module.exports = Delete;
 
-},{"./facade":104,"./utils":112}],104:[function(require,module,exports){
+},{"./facade":124,"./utils":132}],124:[function(require,module,exports){
 'use strict';
 
 var address = require('./address');
@@ -14007,7 +15810,7 @@ function transform(obj) {
 
 module.exports = Facade;
 
-},{"./address":101,"./is-enabled":108,"./utils":112,"@segment/isodate-traverse":51,"new-date":91,"obj-case":96}],105:[function(require,module,exports){
+},{"./address":121,"./is-enabled":128,"./utils":132,"@segment/isodate-traverse":59,"new-date":111,"obj-case":116}],125:[function(require,module,exports){
 'use strict';
 
 var inherit = require('./utils').inherit;
@@ -14174,7 +15977,7 @@ Group.prototype.properties = function() {
 
 module.exports = Group;
 
-},{"./facade":104,"./utils":112,"is-email":83,"new-date":91}],106:[function(require,module,exports){
+},{"./facade":124,"./utils":132,"is-email":103,"new-date":111}],126:[function(require,module,exports){
 'use strict';
 
 var Facade = require('./facade');
@@ -14554,7 +16357,7 @@ Identify.prototype.birthday = Facade.proxy('traits.birthday');
 
 module.exports = Identify;
 
-},{"./facade":104,"./utils":112,"is-email":83,"new-date":91,"obj-case":96,"trim":121}],107:[function(require,module,exports){
+},{"./facade":124,"./utils":132,"is-email":103,"new-date":111,"obj-case":116,"trim":141}],127:[function(require,module,exports){
 'use strict';
 
 var Facade = require('./facade');
@@ -14569,7 +16372,7 @@ Facade.Delete = require('./delete');
 
 module.exports = Facade;
 
-},{"./alias":102,"./delete":103,"./facade":104,"./group":105,"./identify":106,"./page":109,"./screen":110,"./track":111}],108:[function(require,module,exports){
+},{"./alias":122,"./delete":123,"./facade":124,"./group":125,"./identify":126,"./page":129,"./screen":130,"./track":131}],128:[function(require,module,exports){
 'use strict';
 
 // A few integrations are disabled by default. They must be explicitly enabled
@@ -14589,7 +16392,7 @@ module.exports = function(integration) {
   return !disabled[integration];
 };
 
-},{}],109:[function(require,module,exports){
+},{}],129:[function(require,module,exports){
 'use strict';
 
 var inherit = require('./utils').inherit;
@@ -14805,7 +16608,7 @@ Page.prototype.track = function(name) {
 
 module.exports = Page;
 
-},{"./facade":104,"./track":111,"./utils":112,"is-email":83}],110:[function(require,module,exports){
+},{"./facade":124,"./track":131,"./utils":132,"is-email":103}],130:[function(require,module,exports){
 'use strict';
 
 var inherit = require('./utils').inherit;
@@ -14877,7 +16680,7 @@ Screen.prototype.track = function(name) {
 
 module.exports = Screen;
 
-},{"./page":109,"./track":111,"./utils":112}],111:[function(require,module,exports){
+},{"./page":129,"./track":131,"./utils":132}],131:[function(require,module,exports){
 'use strict';
 
 var inherit = require('./utils').inherit;
@@ -15466,14 +17269,14 @@ function currency(val) {
 
 module.exports = Track;
 
-},{"./facade":104,"./identify":106,"./utils":112,"is-email":83,"obj-case":96}],112:[function(require,module,exports){
+},{"./facade":124,"./identify":126,"./utils":132,"is-email":103,"obj-case":116}],132:[function(require,module,exports){
 'use strict';
 
 exports.inherit = require('inherits');
 exports.clone = require('@ndhoule/clone');
 exports.type = require('type-component');
 
-},{"@ndhoule/clone":5,"inherits":82,"type-component":122}],113:[function(require,module,exports){
+},{"@ndhoule/clone":5,"inherits":102,"type-component":142}],133:[function(require,module,exports){
 
 /**
  * Generate a slug from the given `str`.
@@ -15498,7 +17301,7 @@ module.exports = function (str, options) {
     .replace(/ +/g, options.separator || '-')
 };
 
-},{}],114:[function(require,module,exports){
+},{}],134:[function(require,module,exports){
 (function (factory) {
     if (typeof exports === 'object') {
         // Node/CommonJS
@@ -16203,7 +18006,7 @@ module.exports = function (str, options) {
     return SparkMD5;
 }));
 
-},{}],115:[function(require,module,exports){
+},{}],135:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -16282,7 +18085,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":98,"timers":115}],116:[function(require,module,exports){
+},{"process/browser.js":118,"timers":135}],136:[function(require,module,exports){
 
 var space = require('to-space-case')
 
@@ -16305,7 +18108,7 @@ function toCamelCase(string) {
   })
 }
 
-},{"to-space-case":119}],117:[function(require,module,exports){
+},{"to-space-case":139}],137:[function(require,module,exports){
 
 /**
  * Module Dependencies
@@ -16459,7 +18262,7 @@ function stripNested (prop, str, val) {
   });
 }
 
-},{"component-props":69,"props":69}],118:[function(require,module,exports){
+},{"component-props":89,"props":89}],138:[function(require,module,exports){
 
 /**
  * Expose `toNoCase`.
@@ -16531,7 +18334,7 @@ function uncamelize (string) {
     return previous + ' ' + uppers.toLowerCase().split('').join(' ');
   });
 }
-},{}],119:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 
 var clean = require('to-no-case')
 
@@ -16554,7 +18357,7 @@ function toSpaceCase(string) {
   }).trim()
 }
 
-},{"to-no-case":120}],120:[function(require,module,exports){
+},{"to-no-case":140}],140:[function(require,module,exports){
 
 /**
  * Export.
@@ -16623,7 +18426,7 @@ function uncamelize(string) {
   })
 }
 
-},{}],121:[function(require,module,exports){
+},{}],141:[function(require,module,exports){
 
 exports = module.exports = trim;
 
@@ -16639,7 +18442,7 @@ exports.right = function(str){
   return str.replace(/\s*$/, '');
 };
 
-},{}],122:[function(require,module,exports){
+},{}],142:[function(require,module,exports){
 
 /**
  * toString ref.
@@ -16671,7 +18474,7 @@ module.exports = function(val){
   return typeof val;
 };
 
-},{}],123:[function(require,module,exports){
+},{}],143:[function(require,module,exports){
 
 /**
  * Protocol.
@@ -16709,7 +18512,7 @@ function check () {
     location.protocol == 'chrome-extension:'
   );
 }
-},{}],124:[function(require,module,exports){
+},{}],144:[function(require,module,exports){
 module.exports = encode;
 
 function encode(string) {
@@ -16737,7 +18540,7 @@ function encode(string) {
 
     return utftext;
 }
-},{}],125:[function(require,module,exports){
+},{}],145:[function(require,module,exports){
 (function (global){
 
 var rng;
@@ -16773,7 +18576,7 @@ module.exports = rng;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],126:[function(require,module,exports){
+},{}],146:[function(require,module,exports){
 //     uuid.js
 //
 //     Copyright (c) 2010-2012 Robert Kieffer
@@ -16958,7 +18761,119 @@ uuid.unparse = unparse;
 
 module.exports = uuid;
 
-},{"./rng":125}],127:[function(require,module,exports){
+},{"./rng":145}],147:[function(require,module,exports){
+
+/**
+ * dependencies.
+ */
+
+var unserialize = require('unserialize');
+var each = require('each');
+var storage;
+
+/**
+ * Safari throws when a user
+ * blocks access to cookies / localstorage.
+ */
+
+try {
+  storage = window.localStorage;
+} catch (e) {
+  storage = null;
+}
+
+/**
+ * Expose `store`
+ */
+
+module.exports = store;
+
+/**
+ * Store the given `key`, `val`.
+ *
+ * @param {String|Object} key
+ * @param {Mixed} value
+ * @return {Mixed}
+ * @api public
+ */
+
+function store(key, value){
+  var length = arguments.length;
+  if (0 == length) return all();
+  if (2 <= length) return set(key, value);
+  if (1 != length) return;
+  if (null == key) return storage.clear();
+  if ('string' == typeof key) return get(key);
+  if ('object' == typeof key) return each(key, set);
+}
+
+/**
+ * supported flag.
+ */
+
+store.supported = !! storage;
+
+/**
+ * Set `key` to `val`.
+ *
+ * @param {String} key
+ * @param {Mixed} val
+ */
+
+function set(key, val){
+  return null == val
+    ? storage.removeItem(key)
+    : storage.setItem(key, JSON.stringify(val));
+}
+
+/**
+ * Get `key`.
+ *
+ * @param {String} key
+ * @return {Mixed}
+ */
+
+function get(key){
+  return unserialize(storage.getItem(key));
+}
+
+/**
+ * Get all.
+ *
+ * @return {Object}
+ */
+
+function all(){
+  var len = storage.length;
+  var ret = {};
+  var key;
+
+  while (0 <= --len) {
+    key = storage.key(len);
+    ret[key] = get(key);
+  }
+
+  return ret;
+}
+
+},{"each":85,"unserialize":148}],148:[function(require,module,exports){
+
+/**
+ * Unserialize the given "stringified" javascript.
+ * 
+ * @param {String} val
+ * @return {Mixed}
+ */
+
+module.exports = function(val){
+  try {
+    return JSON.parse(val);
+  } catch (e) {
+    return val || undefined;
+  }
+};
+
+},{}],149:[function(require,module,exports){
 module.exports={
   "name": "@segment/analytics.js",
   "author": "Segment <friends@segment.com>",
